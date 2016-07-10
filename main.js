@@ -1,4 +1,4 @@
-﻿/**
+/**
   * @param {Array} data – массив CSS классов
   */
 module.exports = function(data) {
@@ -11,11 +11,13 @@ module.exports = function(data) {
 	
 	
 	var sorted = this.data;
+	// отсортируем классы по имени
 	sorted.sort();
 	
 	var current = null;
 	var cnt = 0;
 	
+	// запишем контекст для дальнейшего использования
 	var self = this;
 	
 	for(var i=0;i<sorted.length;i++) {
@@ -31,11 +33,15 @@ module.exports = function(data) {
 		}
 	}
 	
+	// Упорядочим классы по частоте появления
 	this.weights.sort(function(item1,item2){ return item2.weight-item1.weight; });
 	
+	/**
+	 * @param {int} nameLength длина имени класса
+	 */
 	var generateName = function(nameLength) {
 		if(typeof nameLength === "undefined")
-		nameLength = 0;
+			nameLength = 0;
 	
 		var charsList = 'abcdefghijklmnopqrstuvwxyz';
 		var numbersAndSymbols = '0123456789_-';
@@ -44,6 +50,9 @@ module.exports = function(data) {
 		   return Math.floor(Math.random() * (max - min)) + min;
 		}
 		
+		/**
+		 * @param {string} charsList строка содержащая символы для новых имен классов
+		 */
 		function getRandomChar(charsList) {
 			return charsList.charAt(getRandomInt(0,charsList.length-1));
 		}
@@ -56,10 +65,12 @@ module.exports = function(data) {
 		var result = getRandomChar(charsList)+charStr;
 		
 		if(typeof self.usedNames[result] === 'undefined') {
+			// Если данное имя не используется, то возвращаем его
 			self.usedNames[result] = 1;
 			return result;
 		}
 		else {
+			// Если используется, получаем новое
 			return generateName(nameLength);
 		}
 	}
@@ -68,9 +79,9 @@ module.exports = function(data) {
 	var currentWeight = this.weights[0].weight;
 	
 	for(var key in this.weights) {
+		// в цикле генерируем имена новых классов
 		var current = this.weights[key];
-		if(current.weight!==currentWeight)
-		{
+		if(current.weight!==currentWeight) {
 			nameLength++;
 			currentWeight = current.weight;
 		}
